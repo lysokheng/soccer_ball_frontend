@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:soccer_ball_frontend/main.dart';
-import 'package:soccer_ball_frontend/world/Ground.dart';
+import 'package:soccer_ball_frontend/screen/world/Ground.dart';
 
 class Leena extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<LeenaGame> {
-  Leena() : super() {
+  Leena({required posititon}) : super(position: posititon) {
     debugMode = true;
+    size = Vector2(83, 100);
     anchor = Anchor.bottomCenter;
   }
   bool onGround = false;
@@ -20,7 +21,7 @@ class Leena extends SpriteAnimationComponent
   FutureOr<void> onLoad() async {
     await super.onLoad();
 
-    add(RectangleHitbox());
+    add(RectangleHitbox(size: Vector2(width * .7, height)));
   }
 
   @override

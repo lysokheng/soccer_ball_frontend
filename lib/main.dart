@@ -8,22 +8,41 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_texturepacker/flame_texturepacker.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
-import 'package:soccer_ball_frontend/actors/gem.dart';
-import 'package:soccer_ball_frontend/actors/leena.dart';
-import 'package:soccer_ball_frontend/world/Ground.dart';
+import 'package:get/get.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:soccer_ball_frontend/screen/actors/gem.dart';
+import 'package:soccer_ball_frontend/screen/actors/leena.dart';
+import 'package:soccer_ball_frontend/screen/dashboard/dashboard.dart';
+import 'package:soccer_ball_frontend/screen/world/Ground.dart';
+import 'package:soccer_ball_frontend/screen/world/intro.dart';
+
+import 'controller/game_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
   Flame.device.setLandscape();
-  runApp(GameWidget(
-    game: LeenaGame(),
+  runApp(GetMaterialApp(
+    home: Scaffold(
+      body: GameWidget(
+        game: LeenaGame(),
+        overlayBuilderMap: {
+          'DashboardOverlay': (BuildContext context, LeenaGame game) {
+            return Dashboard(
+              game: LeenaGame(),
+            );
+          }
+        },
+      ),
+    ),
   ));
 }
 
 class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
-  Leena leena = Leena();
-  final double gravity = 3;
+  GameController controller = Get.put<GameController>(GameController());
+
+  Leena leena = Leena(posititon: Vector2(600, 30));
+  final double gravity = 2.8;
   final double pushSpeed = 80;
   final double groundFriction = .52;
   final double jumpForce = 180;
@@ -34,9 +53,20 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
   late SpriteAnimation idleAnim;
   late SpriteAnimation jumpAnim;
   late double mapWidth;
+  late AudioPool yay;
+  late AudioPool bonus;
+  late Timer countDown;
+  late Intro intro;
+  late Sprite dadSprite;
   @override
   FutureOr<void> onLoad() async {
     await super.onLoad();
+
+    countDown = Timer(1, onTick: () {
+      if (controller.remainingTime > 0) {
+        controller.remainingTime -= 1;
+      }
+    }, repeat: true);
 
     homeMap = await TiledComponent.load('map2.tmx', Vector2.all(32));
     add(homeMap);
@@ -52,10 +82,11 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
     }
 
     final gemGroup = homeMap.tileMap.getLayer<ObjectGroup>('gems');
-
+    controller.numGems.value = gemGroup!.objects.length;
     for (final gem in gemGroup!.objects) {
+      var gemSprite = await loadSprite('gems/${gem.type}.png');
       add(Gem(tiledObject: gem)
-        ..sprite = await loadSprite('gems/Ruby.png')
+        ..sprite = gemSprite
         ..position = Vector2(gem.x, gem.y - gem.height)
         ..size = Vector2(gem.width, gem.height));
     }
@@ -74,16 +105,23 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
     jumpAnim = SpriteAnimation.spriteList(
         await fromJSONAtlas('jump.png', 'jump.json'),
         stepTime: 0.1);
-    leena
-      ..animation = rideAnim
-      ..size = Vector2(83, 100)
-      ..position = Vector2(600, 30);
+    leena..animation = rideAnim;
     add(leena);
 
     camera.followComponent(leena,
         worldBounds: Rect.fromLTRB(0, 0, mapWidth, mapHeight));
 
     //load audio file from local storage into game
+    yay = await AudioPool.create(
+        source: AssetSource('audio/sfx/yay.mp3'), maxPlayers: 0);
+    bonus = await AudioPool.create(
+        source: AssetSource('audio/sfx/bonus.wav'), maxPlayers: 0);
+
+    overlays.add('DashboardOverlay');
+
+    dadSprite = await loadSprite('dad.png');
+    intro = Intro(size: size);
+    add(intro);
   }
 
   @override
@@ -94,13 +132,22 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
       velocity.y += gravity;
     }
     leena.position += velocity * dt;
+
+    if (controller.timeStarted.value && controller.remainingTime.value > 0) {
+      countDown.update(dt);
+    }
   }
 
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
-    if (leena.onGround) {
+    if (!controller.introFinished.value) {
+      controller.introFinished.value = true;
+      remove(intro);
+    }
+    if (leena.onGround && controller.introFinished.value) {
       if (info.eventPosition.viewport.x < 100) {
+        controller.timeStarted.value = true;
         print('push left');
 
         if (leena.facingRight) {
@@ -108,25 +155,31 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
           leena.facingRight = false;
         }
         if (!leena.hitLeft) {
-          leena.x -= 15;
+          leena.x -= 10;
           velocity.x -= pushSpeed;
           leena.animation = pushAnim;
           Future.delayed(const Duration(milliseconds: 1200), () {
-            leena.animation = rideAnim;
+            if (leena.animation != jumpAnim) {
+              leena.animation = rideAnim;
+            }
           });
         }
       } else if (info.eventPosition.viewport.x > size[0] - 100) {
+        controller.timeStarted.value = true;
+
         print('push right');
         if (!leena.facingRight) {
           leena.facingRight = true;
           leena.flipHorizontallyAroundCenter();
         }
         if (!leena.hitRight) {
-          leena.x += 15;
+          leena.x += 10;
           velocity.x += pushSpeed;
           leena.animation = pushAnim;
           Future.delayed(const Duration(milliseconds: 1200), () {
-            leena.animation = rideAnim;
+            if (leena.animation != jumpAnim) {
+              leena.animation = rideAnim;
+            }
           });
         }
       }
@@ -137,6 +190,8 @@ class LeenaGame extends FlameGame with HasCollisionDetection, TapDetector {
         Future.delayed(const Duration(milliseconds: 1200), () {
           leena.animation = rideAnim;
         });
+
+        if (controller.remainingTime.value > 0) {}
         leena.y -= 10;
         velocity.y = -jumpForce;
         leena.onGround = false;

@@ -39,6 +39,7 @@ dependencies:
   flame_tiled: ^1.13.0
   flame_texturepacker: ^2.1.0
   flame_audio: ^2.0.5
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -82,10 +83,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Arcade
+      fonts:
+        - asset: assets/fonts/ARCADECLASSIC.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
