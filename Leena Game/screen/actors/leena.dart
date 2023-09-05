@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:soccer_ball_frontend/main.dart';
-import 'package:soccer_ball_frontend/screen/world/Ground.dart';
+
+import '../../leena_game.dart';
+import '../world/Ground.dart';
 
 class Leena extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<LeenaGame> {

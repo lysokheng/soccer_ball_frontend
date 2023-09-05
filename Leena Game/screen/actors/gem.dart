@@ -4,14 +4,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:get/get.dart';
-import 'package:soccer_ball_frontend/controller/game_controller.dart';
-import 'package:soccer_ball_frontend/screen/actors/leena.dart';
-import 'package:soccer_ball_frontend/main.dart';
+
+import '../../controller/game_controller.dart';
+import '../../leena_game.dart';
 
 class Gem extends SpriteComponent
     with CollisionCallbacks, HasGameRef<LeenaGame> {
   final TiledObject tiledObject;
-  final GameController get = Get.put(GameController());
+  final LeenaGameController get = Get.put(LeenaGameController());
   Gem({required this.tiledObject}) : super() {
     debugMode = true;
   }
@@ -24,7 +24,7 @@ class Gem extends SpriteComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     print('hit gem');
-    if (other is Leena) {
+    if (other is LeenaGame) {
       removeFromParent();
       gameRef.bonus.start();
       get.magicLevel += 1;

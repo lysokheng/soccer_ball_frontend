@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:soccer_ball_frontend/controller/game_controller.dart';
 
-import 'package:soccer_ball_frontend/main.dart';
+import '../../controller/game_controller.dart';
+import '../../leena_game.dart';
 
 class Dashboard extends StatelessWidget {
-  final SoccerGame game;
+  final LeenaGame game;
   const Dashboard({
     super.key,
     required this.game,
   });
   @override
   Widget build(BuildContext context) {
-    SoccerGameController controller =
-        Get.put<SoccerGameController>(SoccerGameController());
+    LeenaGameController controller =
+        Get.put<LeenaGameController>(LeenaGameController());
     return Obx(() {
       return controller.introFinished.value
           ? Column(

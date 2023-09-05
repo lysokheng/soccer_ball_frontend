@@ -3,11 +3,10 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:soccer_ball_frontend/main.dart';
 
-import '../actors/player1.dart';
+import '../../leena_game.dart';
 
-class Intro extends PositionComponent with HasGameRef<SoccerGame> {
+class Intro extends PositionComponent with HasGameRef<LeenaGame> {
   Intro({required size}) : super(size: size);
   late SpriteComponent dad;
   String introString =

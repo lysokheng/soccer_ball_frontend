@@ -69,6 +69,10 @@ flutter:
     - assets/tiles/
     - assets/images/ground_tiles/
     - assets/images/gems/
+    - assets/images/nets/
+    - assets/images/field/
+    - assets/images/balls/
+
     - assets/
     - assets/audio/sfx/
 
