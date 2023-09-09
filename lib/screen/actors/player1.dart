@@ -26,7 +26,7 @@ class Player1 extends SpriteAnimationComponent
 
   @override
   FutureOr<void> onLoad() async {
-    add(RectangleHitbox(size: Vector2(width * .7, height)));
+    add(RectangleHitbox(size: Vector2(width, height)));
     animation = gameRef.rideAnim;
     position = gameRef.size / 2;
 
@@ -45,8 +45,7 @@ class Player1 extends SpriteAnimationComponent
             gameRef.player1.facingRight = false;
           }
           if (!gameRef.player1.hitLeft) {
-            gameRef.player1.x -= 10;
-            gameRef.velocity.x -= gameRef.pushSpeed;
+            gameRef.player1.x -= 3;
             gameRef.player1.animation = gameRef.pushAnim;
             Future.delayed(const Duration(milliseconds: 1200), () {
               if (gameRef.player1.animation != gameRef.jumpAnim) {
@@ -68,8 +67,7 @@ class Player1 extends SpriteAnimationComponent
             gameRef.player1.flipHorizontallyAroundCenter();
           }
           if (!gameRef.player1.hitRight) {
-            gameRef.player1.x += 10;
-            gameRef.velocity.x += gameRef.pushSpeed;
+            gameRef.player1.x += 3;
             gameRef.player1.animation = gameRef.pushAnim;
             Future.delayed(const Duration(milliseconds: 1200), () {
               if (gameRef.player1.animation != gameRef.jumpAnim) {
