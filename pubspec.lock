@@ -169,6 +169,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  flame_forge2d:
+    dependency: "direct main"
+    description:
+      name: flame_forge2d
+      sha256: fae89e7074c5afecad8003ab3d246a7f025f6abc4b5e532a14dbf49939d9ac8f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.1+1"
   flame_texturepacker:
     dependency: "direct main"
     description:
@@ -198,6 +206,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_screenutil:
+    dependency: "direct main"
+    description:
+      name: flutter_screenutil
+      sha256: "8cf100b8e4973dc570b6415a2090b0bfaa8756ad333db46939efc3e774ee100d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.9.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -208,6 +224,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  forge2d:
+    dependency: "direct main"
+    description:
+      name: forge2d
+      sha256: "82e6e89bd1224d87066e9b164d534c4977f4895f554f931608a182534fac6e5e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   get:
     dependency: "direct main"
     description:
@@ -493,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.3.0"
+  zoom_tap_animation:
+    dependency: "direct main"
+    description:
+      name: zoom_tap_animation
+      sha256: d9f7a73cab65aa1546ba6886b5e21d3c8ccccb34e4e5f770301c306d4868bee0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
 sdks:
   dart: ">=3.1.0 <4.0.0"
   flutter: ">=3.10.0"

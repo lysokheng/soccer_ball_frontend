@@ -40,6 +40,10 @@ dependencies:
   flame_texturepacker: ^2.1.0
   flame_audio: ^2.0.5
   get: ^4.6.5
+  forge2d: ^0.11.0
+  zoom_tap_animation: ^1.1.0
+  flutter_screenutil: ^5.9.0
+  flame_forge2d: ^0.14.1+1
 
 dev_dependencies:
   flutter_test:
@@ -66,14 +70,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/Ronaldo/    
+    - assets/images/Messi/
+    - assets/images/Ball/
     - assets/tiles/
-    - assets/images/ground_tiles/
-    - assets/images/gems/
-    - assets/images/nets/
-    - assets/images/field/
-    - assets/images/balls/
-
     - assets/
+    - assets/images/HUD/
     - assets/audio/sfx/
 
   # An image asset can refer to one or more resolution-specific "variants", see
